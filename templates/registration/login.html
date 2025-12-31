@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login</title>
+
+  <style>
+    :root {
+      --bg-main: #0b0f14;
+      --bg-card: #111827;
+
+      --text-main: #f5f7fa;
+      --text-muted: #9ca3af;
+
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+
+      --border-soft: #1f2937;
+      --glow-blue: 0 0 18px rgba(59,130,246,.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0f172a, var(--bg-main));
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    /* ---------- CARD ---------- */
+    .card {
+      background: linear-gradient(180deg, #0f172a, var(--bg-card));
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 14px 38px rgba(0,0,0,.75);
+    }
+
+    /* ---------- LOGO ---------- */
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .logo .present {
+      color: var(--blue);
+    }
+
+    .logo .x {
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 10px 0 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      font-size: 0.95rem;
+    }
+
+    /* ---------- ERRORS ---------- */
+    .errors {
+      background: rgba(239,68,68,.15);
+      border: 1px solid rgba(239,68,68,.4);
+      color: #fecaca;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    /* ---------- FORM ---------- */
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: #020617;
+      color: white;
+      font-size: 15px;
+      transition: border .2s, box-shadow .2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: var(--glow-blue);
+    }
+
+    /* ---------- BUTTON ---------- */
+    button {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      background: var(--green);
+      color: #052e16;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(34,197,94,.7);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ---------- LINKS ---------- */
+    .links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    .links a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <div class="logo">
+      <span class="present">Present</span><span class="x">X</span>
+    </div>
+
+    <h1>Student Login</h1>
+    <div class="subtitle">
+      Use your <strong>roll number</strong> as username
+    </div>
+
+    {% if form.errors %}
+      <div class="errors">Invalid credentials. Please try again.</div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="id_username">Roll number</label>
+      {{ form.username }}
+
+      <label for="id_password">Password</label>
+      {{ form.password }}
+
+      <button type="submit">Log in</button>
+    </form>
+
+    <div class="links">
+      <a href="{% url 'attendance:register' %}">Register</a>
+      <a href="{% url 'password_reset' %}">Forgot password?</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

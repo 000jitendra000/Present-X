@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mark Attendance</title>
+
+  <style>
+    :root {
+      --bg-main: #0b0f14;
+      --bg-card: #111827;
+
+      --text-main: #f5f7fa;
+      --text-muted: #9ca3af;
+
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --orange: #f97316;
+
+      --border-soft: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      background: radial-gradient(circle at top, #0f172a, var(--bg-main));
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    header a {
+      color: var(--blue);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    button {
+      font-family: inherit;
+    }
+
+    .logout-btn {
+      background: var(--red);
+      color: #450a0a;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(239,68,68,.6);
+    }
+
+    /* ---------- DATE FORM ---------- */
+    .date-form {
+      margin-bottom: 14px;
+    }
+
+    input[type="date"] {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: #020617;
+      color: white;
+    }
+
+    /* ---------- PERIOD CARD ---------- */
+    .period {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      background: linear-gradient(180deg, #0f172a, var(--bg-card));
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 8px 26px rgba(0,0,0,.7);
+    }
+
+    .subject {
+      flex: 1;
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    /* ---------- CONTROL BUTTONS ---------- */
+    .controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-present {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .btn-absent {
+      background: var(--red);
+      color: #450a0a;
+    }
+
+    .btn-cancel {
+      background: var(--orange);
+      color: #431407;
+    }
+
+    .btn.active {
+      box-shadow: 0 0 16px rgba(255,255,255,.35);
+      transform: scale(1.03);
+    }
+
+    /* ---------- SAVE BUTTON ---------- */
+    .save-btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      font-weight: bold;
+      background: var(--blue);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(59,130,246,.7);
+    }
+
+    /* ---------- SMALL TEXT ---------- */
+    .small {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Mark Attendance</h1>
+
+    <a href="{% url 'attendance:dashboard' %}">← Dashboard</a>
+
+    <form method="post" action="{% url 'logout' %}" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="logout-btn">Logout</button>
+    </form>
+  </header>
+
+  <main>
+
+    <!-- Date selector -->
+    <form method="get" class="date-form">
+      <label class="small">
+        Select date:
+        <input
+          type="date"
+          name="date"
+          value="{{ selected_date|date:'Y-m-d' }}"
+          min="{{ semester.start_date|date:'Y-m-d' }}"
+          max="{{ today|date:'Y-m-d' }}"
+          onchange="this.form.submit()"
+        >
+      </label>
+    </form>
+
+    <!-- Mark whole day holiday -->
+    <form method="post" style="margin-bottom:16px;">
+      {% csrf_token %}
+      <input type="hidden" name="mark_holiday" value="1">
+      <button type="submit" class="btn btn-cancel">Mark Whole Day as Holiday</button>
+    </form>
+
+    <form method="post" id="attendance-form">
+      {% csrf_token %}
+
+      {% if entries %}
+        {% for e in entries %}
+          <div class="period" data-entry-id="{{ e.id }}">
+            <div class="subject">P{{ e.period }} — {{ e.subject.name }}</div>
+
+            <div class="controls">
+              <button type="button" class="btn btn-present" data-value="P">Present</button>
+              <button type="button" class="btn btn-absent" data-value="A">Absent</button>
+              <button type="button" class="btn btn-cancel" data-value="C">Cancel</button>
+            </div>
+
+            <input type="hidden" name="attendance_{{ e.id }}" value="{{ e.saved_status }}">
+          </div>
+        {% endfor %}
+
+        <div style="margin-top:16px">
+          <button type="submit" class="save-btn">Save Attendance</button>
+        </div>
+      {% else %}
+        <div class="small">No periods found for this day in your timetable.</div>
+      {% endif %}
+    </form>
+  </main>
+
+  <script>
+    function setActive(periodEl, value) {
+      const buttons = periodEl.querySelectorAll('.btn');
+      const hidden = periodEl.querySelector('input[type=hidden]');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      if (!hidden) return;
+
+      hidden.value = value;
+
+      const target = periodEl.querySelector(`.btn[data-value="${value}"]`);
+      if (target) target.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.period').forEach(function (periodEl) {
+        const hidden = periodEl.querySelector('input[type=hidden]');
+        if (!hidden) return;
+
+        const savedStatus = hidden.value;
+        if (savedStatus) {
+          setActive(periodEl, savedStatus);
+        }
+
+        periodEl.querySelectorAll('.btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            setActive(periodEl, btn.dataset.value);
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

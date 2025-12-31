@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Logged Out</title>
+
+  <style>
+    :root {
+      --bg-main: #0b0f14;
+      --bg-card: #111827;
+
+      --text-main: #f5f7fa;
+      --text-muted: #9ca3af;
+
+      --blue: #3b82f6;
+
+      --border-soft: #1f2937;
+      --glow-blue: 0 0 16px rgba(59,130,246,.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0f172a, var(--bg-main));
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    /* ---------- CARD ---------- */
+    .card {
+      background: linear-gradient(180deg, #0f172a, var(--bg-card));
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      padding: 32px 28px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 14px 36px rgba(0,0,0,.75);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin: 8px 0;
+      color: var(--text-muted);
+    }
+
+    /* ---------- LINK BUTTON ---------- */
+    a {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 12px 22px;
+      border-radius: 14px;
+      background: var(--blue);
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: var(--glow-blue);
+      transition: transform .15s ease;
+    }
+
+    a:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ---------- LOGO ---------- */
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .logo .present {
+      color: var(--blue);
+    }
+
+    .logo .x {
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <div class="logo">
+      <span class="present">Present</span><span class="x">X</span>
+    </div>
+
+    <h1>Logged out</h1>
+
+    <p>You have been logged out successfully.</p>
+    <p class="small">Your session has ended safely.</p>
+
+    <a href="{% url 'login' %}">Log in again</a>
+  </div>
+
+</body>
+</html>
