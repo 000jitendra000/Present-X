@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-xxz(r$7$=3a8ne&jrg@ewt+&$_x4-wqrd^@^6vd#)z7rz7tc72"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "present-x.onrender.com",
+    ".onrender.com",
+]
 
 
 # Application definition
@@ -132,3 +135,5 @@ USE_TZ = True
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
