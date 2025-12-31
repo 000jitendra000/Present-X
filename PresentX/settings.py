@@ -128,3 +128,7 @@ LOGIN_REDIRECT_URL = '/'  # or reverse('attendance:dashboard')
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
+
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"

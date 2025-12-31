@@ -1,5 +1,5 @@
 """
-WSGI config for PresentX project.
+WSGI config for freebirds project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
