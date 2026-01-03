@@ -158,26 +158,22 @@
 
 <body>
 
-  <div class="card">
+  <body>
 
-    <div class="logo">
-      <span class="present">Present</span><span class="x">X</span>
-    </div>
+<h1>Create Account</h1>
 
-    <h1>Create Account</h1>
-    <div class="subtitle">Join PresentX and start tracking attendance</div>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Register</button>
+</form>
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Register</button>
-    </form>
+<p>
+  Already have an account?
+  <a href="{% url 'login' %}">Login</a>
+</p>
 
-    <div class="link">
-      <a href="{% url 'login' %}">Already have an account? Log in</a>
-    </div>
-
-  </div>
+</body>
 
 </body>
 </html>

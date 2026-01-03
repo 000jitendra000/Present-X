@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +31,8 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "present-x.onrender.com",
     ".onrender.com",
+    "127.0.0.1",
+    "localhost",
 ]
 
 
@@ -78,12 +83,14 @@ WSGI_APPLICATION = "PresentX.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600,
+    )
 }
 
+if os.environ.get('DATABASE_URL', '').startswith('postgres'):
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -137,3 +144,19 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'ronankijitendra@gmail.com'
+EMAIL_HOST_PASSWORD = 'cdyrcgseeahoopym'
+
+DEFAULT_FROM_EMAIL = 'PresentX <ronankijitendra@gmail.com>'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

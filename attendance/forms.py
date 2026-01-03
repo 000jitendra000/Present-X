@@ -5,17 +5,27 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class StudentRegistrationForm(UserCreationForm):
-    first_name = forms.CharField(required=False)
-    last_name = forms.CharField(required=False)
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
-    def clean_username(self):
-        # username is expected to be roll number; you can add pattern checks here
-        return self.cleaned_data['username']
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already registered.")
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
+
 
 class SemesterForm(forms.ModelForm):
     class Meta:

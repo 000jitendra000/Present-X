@@ -30,4 +30,13 @@ urlpatterns = [
     # optional: password reset views (simple wiring)
     path('accounts/password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('accounts/', include('django.contrib.auth.urls')),
+
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)

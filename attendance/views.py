@@ -12,6 +12,9 @@ from collections import defaultdict
 from .models import Semester, Subject, TimetableEntry, WEEKDAYS
 # If WEEKDAY_MAP is already defined in this file, do NOT import it
 
+from django.contrib.auth import login
+from .forms import StudentRegistrationForm
+
 def register(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
@@ -21,8 +24,8 @@ def register(request):
             return redirect('attendance:dashboard')
     else:
         form = StudentRegistrationForm()
-    return render(request, 'registration/register.html', {'form': form})
 
+    return render(request, 'registration/register.html', {'form': form})
 
 # ---- utilities ----
 WEEKDAY_MAP = {
